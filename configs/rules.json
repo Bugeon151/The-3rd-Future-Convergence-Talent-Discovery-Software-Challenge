@@ -1,0 +1,35 @@
+[
+  {
+    "text": "기계 작동 중에는 작업자가 1.5m 안에 들어오면 안 된다.",
+    "subject": "person",
+    "target": "machine",
+    "condition": {
+      "machine_active": true,
+      "distance_lt": 1.5
+    },
+    "severity": "high",
+    "rule_id": "default-ko-1"
+  },
+  {
+    "text": "No person may come within 1.5 m of an active vehicle.",
+    "subject": "person",
+    "target": "vehicle",
+    "condition": {
+      "machine_active": true,
+      "distance_lt": 1.5
+    },
+    "severity": "high",
+    "rule_id": "default-en-1"
+  },
+  {
+    "text": "기계 작동 중에는 작업자가 1.5m 안에 들어오면 안 된다.",
+    "subject": "person",
+    "target": "vehicle",
+    "condition": {
+      "machine_active": true,
+      "distance_lt": 1.5
+    },
+    "severity": "medium",
+    "rule_id": "nl-ko"
+  }
+]

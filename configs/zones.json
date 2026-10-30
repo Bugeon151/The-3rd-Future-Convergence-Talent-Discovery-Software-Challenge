@@ -1,0 +1,7 @@
+[
+  {
+    "name": "worker_loading_dock",
+    "polygon": [[-4.0, 2.0], [4.0, 2.0], [4.0, 8.0], [-4.0, 8.0]],
+    "active": true
+  }
+]

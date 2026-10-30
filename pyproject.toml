@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nearzero"
+version = "0.1.0"
+description = "NEAR-ZERO X - Counterfactual Predictive Safety OS"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26",
+    "opencv-python-headless>=4.9",
+    "flask>=3.0",
+    "flask-cors>=4.0",
+    "pytest>=8.0",
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+cuda = ["torch>=2.7", "torchvision>=0.18", "ultralytics>=8.2"]
+
+[tool.setuptools.packages.find]
+include = ["nearzero*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

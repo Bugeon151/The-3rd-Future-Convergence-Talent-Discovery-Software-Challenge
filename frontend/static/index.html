@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEAR-ZERO X · Counterfactual Predictive Safety OS</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">◉</span>
+    <div>
+      <h1>NEAR-ZERO X</h1>
+      <p>Counterfactual Predictive Safety OS · Perceive → Predict → Prevent → Verify</p>
+    </div>
+  </div>
+  <div class="topmeta">
+    <span id="mode" class="chip">…</span>
+    <span id="conn" class="chip ok">online</span>
+  </div>
+</header>
+
+<main>
+  <section class="left">
+    <div class="panel video-panel">
+      <div class="panel-title">LIVE PERCEPTION</div>
+      <img id="feed" src="/video_feed" alt="live feed">
+      <div id="feedstatus" class="feedstatus">connecting…</div>
+    </div>
+  </section>
+
+  <section class="right">
+    <div class="gauge-row">
+      <div class="gauge-block">
+        <div class="panel-title">GLOBAL RISK</div>
+        <div class="gauge" id="riskGauge">
+          <div class="gauge-value" id="riskValue">--</div>
+          <div class="gauge-band" id="riskBand">--</div>
+        </div>
+      </div>
+      <div class="stat-block">
+        <div class="stat"><span>collision</span><b id="statCol">--</b></div>
+        <div class="stat"><span>ttc</span><b id="statTtc">--</b></div>
+        <div class="stat"><span>min. distance</span><b id="statPmd">--</b></div>
+        <div class="stat"><span>confidence</span><b id="statConf">--</b></div>
+      </div>
+    </div>
+
+    <div class="counterfactual panel">
+      <div class="panel-title">COUNTERFACTUAL INTERVENTIONS <span id="bestBadge" class="badge badge-none">NO ACTION</span></div>
+      <table class="ctable">
+        <thead><tr><th>intervention</th><th>result risk</th><th>reduction</th><th>cost</th></tr></thead>
+        <tbody id="ctBody"></tbody>
+      </table>
+    </div>
+
+    <div class="trackfeed panel">
+      <div class="panel-title">TRACKS</div>
+      <table class="ctable">
+        <thead><tr><th>id</th><th>class</th><th>speed</th><th>pos</th></tr></thead>
+        <tbody id="trackBody"></tbody>
+      </table>
+    </div>
+
+    <div class="events panel">
+      <div class="panel-title">VERIFICATION &amp; EVENTS</div>
+      <ol id="eventList" class="evlist"></ol>
+    </div>
+
+    <div class="controls panel">
+      <div class="panel-title">CONTROLS</div>
+      <div class="ctl-row">
+        <label>scenario</label>
+        <select id="scenarioSel"></select>
+        <button id="btnScenario">load</button>
+      </div>
+      <div class="ctl-row">
+        <label>rule</label>
+        <input id="ruleText" placeholder="e.g. vehicle must stop 1.5m from person">
+        <button id="btnRule">add</button>
+      </div>
+      <div class="ctl-row" id="manualRow">
+        <label>manual</label>
+        <div id="manualBtns"></div>
+      </div>
+      <div class="ctl-row">
+        <span class="muted" id="metricsLine">…</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>NEAR-ZERO X · rules compiled to validated JSON DSL · deterministic fallback parser · dashboard is offline-safe (reconnect auto)</span>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

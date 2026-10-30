@@ -1,0 +1,19 @@
+# NEAR-ZERO X runtime dependencies
+# Core AI stack (CUDA build from the PyTorch cu130 index — see scripts/setup.ps1)
+# Run:  .\.venv\Scripts\python.exe -m pip install -r requirements.txt \
+#         --index-url https://download.pytorch.org/whl/cu130
+torch>=2.14.0
+torchvision>=0.29.0
+ultralytics>=8.3
+opencv-python>=4.8
+numpy>=1.26
+
+# Server / dashboard
+flask>=3.0
+flask-cors>=4.0
+
+# Evaluation / plots
+matplotlib>=3.8
+
+# Development
+pytest>=8.0
