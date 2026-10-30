@@ -1,5 +1,137 @@
 # NEAR-ZERO X — Counterfactual Predictive Safety OS
 
+**English** | [한국어](#near-zero-x--counterfactual-predictive-safety-os-한국어)
+
+An AI-based accident-prevention system for industrial mobile robots and carts.
+It is a closed-loop **PERCEIVE → PREDICT → PREVENT → VERIFY** system: *before* an accident happens, it
+**simulates counterfactual actions** that can be taken right now, **recommends** the one that reduces risk the most,
+and **verifies** whether that action actually prevented the accident.
+
+> Safety decisions are not made by an AI (LLM). All safety/risk judgments use a deterministic
+> pipeline based on geometry, probability and physics; natural-language safety rules are compiled into a JSON DSL.
+
+---
+
+## Quick Start
+
+```powershell
+# 1) Set up the environment (CUDA GPU, ~5 min)
+.\scripts\setup.ps1
+
+# 2) Unit and integration tests (38)
+.\scripts\run_tests.ps1
+
+# 3) Evaluation suite (policy comparison + performance benchmark + ablation)
+.\scripts\run_eval.ps1
+
+# 4) Web dashboard + simulation demo (browser: http://localhost:5000)
+.\scripts\run.ps1
+
+# 5) Headless demo (risk trend + counterfactual table + PREVENTED verification output)
+.\scripts\run_demo.ps1
+```
+
+Manual execution:
+
+```powershell
+.\.venv\Scripts\python.exe -m nearzero.demo                    # demo dashboard
+.\.venv\Scripts\python.exe -m nearzero.demo --headless          # print transcript
+.\.venv\Scripts\python.exe -m nearzero.demo --scenario crossing --headless --steps 60
+.\.venv\Scripts\python.exe -m nearzero.eval.all                 # full evaluation
+```
+
+---
+
+## System Architecture (Summary)
+
+| Stage | Module | Role |
+|---|---|---|
+| PERCEIVE | `nearzero/vision/*`, `core/tracks.py` | YOLOv8n detection → ground-plane projection (homography) → Kalman tracking |
+| PREDICT | `prediction/forecast.py` | Interaction-aware ensemble trajectory prediction (with uncertainty samples) |
+| PREVENT | `risk/*`, `planner/*` | Probabilistic risk score + **counterfactual** search (resulting risk per action) |
+| VERIFY | `verify/monitor.py` | PREDICTED → RECOMMENDED → **PREVENTED** event state machine |
+| Safety rules | `rules/*` | Natural-language rules → JSON DSL → deterministic evaluation (no LLM) |
+
+Details: [ARCHITECTURE.md](docs/ARCHITECTURE.md), [RISK_MODEL.md](docs/RISK_MODEL.md)
+
+---
+
+## Measured Performance (measured values only, nothing fabricated)
+
+### Policy comparison (8 matched scenarios, recall / lead time)
+
+| Policy | recall | Mean lead time | False alarms |
+|---|---|---|---|
+| A: distance_threshold | 1.00 | 0.50 s | 1 |
+| B: ttc_threshold | 1.00 | 2.62 s | 2 |
+| C: trajectory_prediction | 1.00 | 2.70 s | 2 |
+| **D: NEAR-ZERO X** | **1.00** | **1.52 s** | **1** |
+
+### NEAR-ZERO X details (flagship demo `demo_avoided`)
+
+- Risk score 0 → **49** (t = 1.9 s, collision probability 72%) → `VEHICLE_RIGHT` recommended and executed → minimum **6** → 0
+- Verification events: **1 `PREVENTED`**
+- Best counterfactual: VEHICLE_RIGHT (resulting risk 1) vs NO_ACTION 49
+
+### Performance benchmark (RTX 5070, GPU)
+
+- Detection (YOLOv8n, CUDA): **48.7 ms/frame**
+- Core pipeline (predict → risk → plan → verify): **181.6 ms/frame**
+
+### Ablation (with/without NEAR-ZERO X components)
+
+| Variant | recall | lead (s) | Alarms | Intervention success | Mean risk reduction |
+|---|---|---|---|---|---|
+| full | 1.00 | 1.43 | 0 | 1.00 | 44.8 |
+| no uncertainty | 1.00 | 2.40 | 0 | 1.00 | 54.1 |
+| no counterfactual | 1.00 | 1.43 | 0 | NULL | NULL |
+| no verification | 1.00 | 1.43 | 0 | 1.00 | 44.8 |
+
+Full tables: [EVALUATION.md](docs/EVALUATION.md) · Raw data: `results/comparison.csv`, `results/metrics.json`
+
+---
+
+## Directory Structure
+
+```
+nearzero/
+  app/          # safety pipeline assembly, state serialization
+  core/         # geometry (homography), Kalman filter, tracking
+  events/       # SQLite event store (thread-safe)
+  planner/      # counterfactual planning + intervention physics
+  prediction/   # ensemble trajectory prediction
+  risk/         # collision probability, TTC, PMD, scoring, zones
+  rules/        # safety rule DSL (natural-language parser + validation)
+  server/       # Flask API, simulation/camera runners
+  sim/          # world simulation + 8 scenarios
+  verify/       # PREVENTED verification state machine
+  vision/       # YOLOv8 detection, annotation, privacy
+  demo/         # demo launcher (dashboard/headless)
+nearzero/eval/  # policy comparison, metrics, benchmark, ablation
+frontend/static/  # web dashboard (poller + MJPEG video)
+scripts/        # PowerShell run scripts
+docs/           # documentation
+tests/          # unit/integration tests (pytest, 38)
+results/        # measured outputs (comparison table, report, plots)
+configs/        # rule/zone JSON + YAML configs
+```
+
+---
+
+## Legal / Ethical Compliance
+
+- No LLM in safety decisions — the rule DSL is evaluated deterministically (`rules/engine.py`)
+- CCTV privacy protection — faces are mosaicked immediately (`vision/privacy.py`)
+- Only preventive warning/limiting functions are implemented; autonomous emergency braking and similar are simulation-only
+
+---
+
+---
+
+# NEAR-ZERO X — Counterfactual Predictive Safety OS (한국어)
+
+[English](#near-zero-x--counterfactual-predictive-safety-os) | **한국어**
+
 AI 기반 산업용 이동로봇 / 카트의 사고 예방 시스템.
 "사고가 나기 **전에**, 지금 취할 수 있는 상반된 행동(counterfactual)을 **미리 시뮬레이션**해서
 가장 위험을 줄이는 행동을 **추천**하고, 그 행동이 실제로 사고를 막았는지 **검증**하는
